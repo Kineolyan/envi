@@ -5,9 +5,8 @@ function envi() {
 	readonly local action=$1
 	if [ "$action" = "shell" ]
 	then
-		shift;
-		source <(python3 "$BASE_DIR/entrypoint.py" $*)
+		source <(python3 "$BASE_DIR/cli.py" $*)
 	else
-		python3 $BASE_DIR/manager.py $*
+		python3 $BASE_DIR/cli.py $*
 	fi
 }

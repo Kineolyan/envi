@@ -38,31 +38,32 @@ MODULES = {
 	"sdkman": process_sdkman,
 }
 
-ENVI_DIR = Path.home() / ".config" / "envi"
-arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument("-f", "--file", help="Path to the file defining the env", default=None)
-arg_parser.add_argument("env_name", help="Name of the environment to setup")
-args = arg_parser.parse_args()
+def generate(args):
+	ENVI_DIR = Path.home() / ".config" / "envi"
+	arg_parser = argparse.ArgumentParser()
+	arg_parser.add_argument("-f", "--file", help="Path to the file defining the env", default=None)
+	arg_parser.add_argument("env_name", help="Name of the environment to setup")
+	args = arg_parser.parse_args(args)
 
-env_name = args.env_name
-env_config_file = (ENVI_DIR / f"{env_name}.ini") if args.file is None else Path(args.file)
+	env_name = args.env_name
+	env_config_file = (ENVI_DIR / f"{env_name}.ini") if args.file is None else Path(args.file)
 
-config = configparser.ConfigParser()
-with env_config_file.open() as f: config.read_file(f)
+	config = configparser.ConfigParser()
+	with env_config_file.open() as f: config.read_file(f)
 
-setup_env_info(env_name)
+	setup_env_info(env_name)
 
-if PROJECT_KEY in config:
-	print("## For the project configuration")
-	process_config(config[PROJECT_KEY])
-	print()
+	if PROJECT_KEY in config:
+		print("## For the project configuration")
+		process_config(config[PROJECT_KEY])
+		print()
 
-for s in config:
-	if s == "DEFAULT" or s == PROJECT_KEY:
-		continue
+	for s in config:
+		if s == "DEFAULT" or s == PROJECT_KEY:
+			continue
 
-	section = config[s]
-	mod = section.get("module", None)
-	print(f"## For `{s}`")
-	MODULES[mod](s, section)
-	print()
+		section = config[s]
+		mod = section.get("module", None)
+		print(f"## For `{s}`")
+		MODULES[mod](s, section)
+		print()
