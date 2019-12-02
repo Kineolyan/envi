@@ -5,7 +5,7 @@ import sys
 
 def setup_env_info(env_name):
 	print("## Environment information")
-	print(f"ENVI_ENV_NAME={env_name}")
+	print(f"export ENVI_ENV_NAME={env_name}")
 
 def process_config(conf):
 	d = conf["root-dir"]

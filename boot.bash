@@ -2,5 +2,12 @@ function envi() {
 	BASE_DIR=$ENVI_DIR
 	[ -z "$BASE_DIR" ] && BASE_DIR=$HOME/.envi
 
-	source <(python3 "$BASE_DIR/entrypoint.py" $*)
+	readonly local action=$1
+	if [ "$action" = "shell" ]
+	then
+		shift;
+		source <(python3 "$BASE_DIR/entrypoint.py" $*)
+	else
+		python3 $BASE_DIR/manager.py $*
+	fi
 }
