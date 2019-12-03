@@ -37,9 +37,9 @@ MODULES = {
 	"pipenv": process_pipenv,
 	"sdkman": process_sdkman,
 }
+ENVI_DIR = Path.home() / ".config" / "envi"
 
 def generate(args):
-	ENVI_DIR = Path.home() / ".config" / "envi"
 	arg_parser = argparse.ArgumentParser()
 	arg_parser.add_argument("-f", "--file", help="Path to the file defining the env", default=None)
 	arg_parser.add_argument("env_name", help="Name of the environment to setup")

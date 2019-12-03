@@ -10,7 +10,7 @@ def parse_arguments(args):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "action", 
-        choices=["current", "version", "shell", "list"], 
+        choices=sorted(["current", "version", "shell", "list", "info"]), 
         help="Possible actions")
     parser.add_argument(
         "env_name",
@@ -21,19 +21,25 @@ def parse_arguments(args):
 
 
 def list_envs():
-        root = Path.home() / ".config" / "envi"
-        print(f"Looking into `{root}`")
-        if not root.exists():
-            print("No defined environments")
+    root = entrypoint.ENVI_DIR
+    print(f"Looking into `{root}`")
+    if not root.exists():
+        print("No defined environments")
 
-        count = 0
-        for file in root.glob("*.ini"):
-            name = str(file.name).replace(".ini", "")
-            print(f" - {name}")
-            count += 1
+    count = 0
+    for file in root.glob("*.ini"):
+        name = str(file.name).replace(".ini", "")
+        print(f" - {name}")
+        count += 1
 
-        if count == 0:
-            print("No defined environments")
+    if count == 0:
+        print("No defined environments")
+
+
+def print_info():
+        print("Envi")
+        print(f"version: {VERSION}")
+        print(f"Environment config directory: {entrypoint.ENVI_DIR}")
 
 
 def main():
@@ -48,6 +54,8 @@ def main():
         entrypoint.generate(forwarded_args)
     elif args.action == "list":
         list_envs()
+    elif args.action == "info":
+        print_info()
 
 
 if __name__ == "__main__":
