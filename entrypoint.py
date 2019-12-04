@@ -30,12 +30,19 @@ def process_pipenv(tool, conf):
 def process_bash(tool, conf):
 	print(conf["command"])
 
+def process_env(_ ,conf):
+	for key in conf:
+		if key != "module":
+			value = conf[key]
+			print(f"export {key}={value}")
+
 PROJECT_KEY = "--project--"
 MODULES = {
 	"asdf": process_asdf,
 	"bash": process_bash,
 	"pipenv": process_pipenv,
 	"sdkman": process_sdkman,
+	"env": process_env
 }
 ENVI_DIR = Path.home() / ".config" / "envi"
 
@@ -49,6 +56,7 @@ def generate(args):
 	env_config_file = (ENVI_DIR / f"{env_name}.ini") if args.file is None else Path(args.file)
 
 	config = configparser.ConfigParser()
+	config.optionxform = str
 	with env_config_file.open() as f: config.read_file(f)
 
 	setup_env_info(env_name)
