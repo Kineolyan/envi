@@ -34,15 +34,22 @@ def process_env(_ ,conf):
 	for key in conf:
 		if key != "module":
 			value = conf[key]
-			print(f"export {key}={value}")
+			print(f"export {key}=\"{value}\"")
+
+def process_alias(_, conf):
+	for key in conf:
+		if key != "module":
+			value = conf[key]
+			print(f"alias {key}=\"{value}\"")
 
 PROJECT_KEY = "--project--"
 MODULES = {
+	"alias": process_alias,
 	"asdf": process_asdf,
 	"bash": process_bash,
+	"env": process_env,
 	"pipenv": process_pipenv,
-	"sdkman": process_sdkman,
-	"env": process_env
+	"sdkman": process_sdkman
 }
 ENVI_DIR = Path.home() / ".config" / "envi"
 
