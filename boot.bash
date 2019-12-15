@@ -3,10 +3,11 @@ function envi() {
 	[ -z "$BASE_DIR" ] && BASE_DIR=$HOME/.envi
 
 	readonly local action=$1
-	if [ "$action" = "shell" ]
+	readonly local output=$(python3 $BASE_DIR/cli.py $*)
+	if [[ "$output" =~ "^##! evaluate" ]]
 	then
-		source <(python3 "$BASE_DIR/cli.py" $*)
+		source <(echo $output)
 	else
-		python3 $BASE_DIR/cli.py $*
+		echo "$output"
 	fi
 }

@@ -6,6 +6,10 @@ import sys
 from __version import VERSION
 import entrypoint
 
+def get_current_env(default = None):
+    return os.getenv("ENVI_ENV_NAME", default)
+
+
 def parse_arguments(args):
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -37,9 +41,15 @@ def list_envs():
 
 
 def print_info():
-        print("Envi")
-        print(f"version: {VERSION}")
-        print(f"Environment config directory: {entrypoint.ENVI_DIR}")
+    print("Envi")
+    print(f"version: {VERSION}")
+    print(f"Environment config directory: {entrypoint.ENVI_DIR}")
+
+
+def reload():
+    env_name = get_current_env()
+    if env_name is None:
+        raise ValueError("No env defined")
 
 
 def main():
@@ -47,9 +57,10 @@ def main():
     if args.action == "version":
         print(f"Version {VERSION}")
     elif args.action == "current":
-        env_name = os.getenv("ENVI_ENV_NAME", "(None)")
+        env_name = get_current_env("(None)")
         print(f"Current env: {env_name}")
     elif args.action == "shell":
+        print("##! evaluate")
         forwarded_args = [arg for arg in sys.argv[1:] if arg != "shell"]
         entrypoint.generate(forwarded_args)
     elif args.action == "list":
