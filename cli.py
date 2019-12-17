@@ -14,7 +14,7 @@ def parse_arguments(args):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "action", 
-        choices=sorted(["current", "version", "shell", "list", "info"]), 
+        choices=sorted(["current", "version", "shell", "list", "info", "reload"]), 
         help="Possible actions")
     parser.add_argument(
         "env_name",
@@ -46,11 +46,17 @@ def print_info():
     print(f"Environment config directory: {entrypoint.ENVI_DIR}")
 
 
-def reload():
+def load_env():
+    forwarded_args = [arg for arg in sys.argv[1:] if arg != "shell"]
+    entrypoint.generate(forwarded_args)
+
+
+def reload_env():
     env_name = get_current_env()
     if env_name is None:
         raise ValueError("No env defined")
-
+    
+    entrypoint.generate([env_name])
 
 def main():
     args = parse_arguments(sys.argv[1:])
@@ -60,9 +66,9 @@ def main():
         env_name = get_current_env("(None)")
         print(f"Current env: {env_name}")
     elif args.action == "shell":
-        print("##! evaluate")
-        forwarded_args = [arg for arg in sys.argv[1:] if arg != "shell"]
-        entrypoint.generate(forwarded_args)
+        load_env()
+    elif args.action == "reload":
+        reload_env()
     elif args.action == "list":
         list_envs()
     elif args.action == "info":
