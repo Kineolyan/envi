@@ -55,7 +55,8 @@ def process_alias(_, conf):
     if contributed:
         alias_dir = str(alias.get_directory())
         current_path = os.getenv("PATH", "")
-        print(f"export PATH={alias_dir}:{current_path}")
+        if alias_dir not in current_path:
+          print(f"export PATH={alias_dir}:{current_path}")
 
 PROJECT_KEY = "--project--"
 MODULES = {
