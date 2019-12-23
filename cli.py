@@ -9,14 +9,13 @@ import entrypoint
 def parse_arguments(args):
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "action", 
-        choices=sorted(["current", "version", "shell", "list", "info", "reload"]), 
-        help="Possible actions")
+        "action",
+        choices=sorted(["current", "version", "shell", "list", "info", "reload"]),
+        help="Possible actions",
+    )
     parser.add_argument(
-        "env_name",
-        default=None,
-        nargs="?",
-        help="Name of the environment to consider")
+        "env_name", default=None, nargs="?", help="Name of the environment to consider"
+    )
     return parser.parse_args(args)
 
 
@@ -51,8 +50,9 @@ def reload_env():
     env_name = entrypoint.get_current_env()
     if env_name is None:
         raise ValueError("No env defined")
-    
+
     entrypoint.generate([env_name])
+
 
 def main():
     args = parse_arguments(sys.argv[1:])
