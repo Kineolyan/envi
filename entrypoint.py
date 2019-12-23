@@ -1,7 +1,13 @@
 import argparse
 import configparser
+import os
 from pathlib import Path
 import sys
+
+import alias
+
+def get_current_env(default = None):
+    return os.getenv("ENVI_ENV_NAME", default)
 
 def setup_env_info(env_name):
   print("## Environment information")
@@ -37,10 +43,19 @@ def process_env(_ ,conf):
       print(f"export {key}=\"{value}\"")
 
 def process_alias(_, conf):
-  for key in conf:
-    if key != "module":
-      value = conf[key]
-      print(f"alias {key}=\"{value}\"")
+    contributed = False
+    for key in conf:
+        if key != "module":
+            value = conf[key]
+            alias.generate_alias_binary(key)
+            env_key, env_value = alias.create_env_key(key, value)
+            print(f"export {env_key}=\"{env_value}\"")
+            contributed = True
+
+    if contributed:
+        alias_dir = str(alias.get_directory())
+        current_path = os.getenv("PATH", "")
+        print(f"export PATH={alias_dir}:{current_path}")
 
 PROJECT_KEY = "--project--"
 MODULES = {
@@ -84,3 +99,6 @@ def generate(args):
     print(f"## For `{s}`")
     MODULES[mod](s, section)
     print()
+
+if __name__ == "__main__":
+  generate(sys.argv[1:])

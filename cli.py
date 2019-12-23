@@ -1,13 +1,9 @@
 import argparse
-import os
 from pathlib import Path
 import sys
 
 from __version import VERSION
 import entrypoint
-
-def get_current_env(default = None):
-    return os.getenv("ENVI_ENV_NAME", default)
 
 
 def parse_arguments(args):
@@ -52,7 +48,7 @@ def load_env():
 
 
 def reload_env():
-    env_name = get_current_env()
+    env_name = entrypoint.get_current_env()
     if env_name is None:
         raise ValueError("No env defined")
     
@@ -63,7 +59,7 @@ def main():
     if args.action == "version":
         print(f"Version {VERSION}")
     elif args.action == "current":
-        env_name = get_current_env("(None)")
+        env_name = entrypoint.get_current_env("(None)")
         print(f"Current env: {env_name}")
     elif args.action == "shell":
         load_env()
